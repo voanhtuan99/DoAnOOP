@@ -1,0 +1,539 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Frame;
+
+import static Frame.FrMain.ketNoi;
+import java.awt.Color;
+import java.awt.Font;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.general.DatasetUtils;
+
+/**
+ *
+ * @author NHT
+ */
+public class FrDetailCP extends javax.swing.JFrame {
+
+    /**
+     * Creates new form FrDetailNDT
+     */
+    private String maCP;
+    private double data[][];
+    public FrDetailCP() {
+        initComponents();
+        
+    }
+    public FrDetailCP(String maTK) {
+        initComponents();
+        this.maCP=maTK;
+        layDataCP();
+        layDataGiaTC();
+        RenderChart();
+        
+    }
+    public void layDataGiaTC() {
+
+        DefaultTableModel dtm = (DefaultTableModel) jTableGTC.getModel();
+        dtm.setNumRows(0);
+
+        data = new double[1][7];
+        for (int j = 0; j < 3; j++) {
+            data[0][j] = 0;
+        }
+        Vector vt;
+        int j=6;
+        String sql = "select TOP 7 * from GiaThamChieu WHERE MaCP='"+maCP+"' ORDER BY NgayGD DESC";
+        try {
+            PreparedStatement ps = ketNoi.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+               
+                vt = new Vector();
+                vt.add(rs.getString("MaCP"));
+                vt.add(rs.getDate("NgayGD"));
+                vt.add(rs.getFloat("GiaTC"));
+                data[0][j--] = rs.getDouble("GiaTC");
+                dtm.addRow(vt);
+            }
+            jTableGTC.setModel(dtm);
+            rs.close();
+            ps.close();
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(FrDetailCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+  
+    public void layDataCP() {
+
+       
+        String sql = "select * from CoPhieu WHERE MaCP='"+maCP+"'";
+        Vector vt;
+        try {
+            PreparedStatement ps = ketNoi.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                
+                jTextFieldMaCP.setText(rs.getString("MaCP"));
+                jTextFieldSan.setText(rs.getString("MaSan"));
+                jTextFieldTenCP.setText(rs.getString("TenCT"));
+                jTextArea1.setText(rs.getString("DiaChi"));
+                jTextFieldSDT.setText(rs.getString("SDT"));
+                jTextFielFax.setText(rs.getString("Fax"));
+                jTextFieldDiaChiWeb.setText(rs.getString("DiaChiWeb"));
+                jTextFieldEmail.setText(rs.getString("Email"));
+                jTextFieldSL.setText(rs.getString("SLCoPhieu"));
+                
+                Locale localeVN = new Locale("vi", "VN");
+                NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+                String str1 = currencyVN.format(rs.getFloat("GiaNiemYet"));
+                jTextFieldGia.setText(str1);
+            
+            }
+            rs.close();
+            ps.close();
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(FrDetailCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public CategoryDataset createDataset() {
+        CategoryDataset dataset = DatasetUtils.createCategoryDataset(
+                "", "", data
+        );
+        return dataset;
+    }
+
+
+    void RenderChart() {
+        CategoryDataset ds = createDataset();
+
+        JFreeChart chart = ChartFactory.createStackedAreaChart("", "", "", ds);
+        chart.setBackgroundPaint(new Color(54, 63, 73));
+        chart.setBorderVisible(false);
+        chart.setBorderPaint(new Color(54, 63, 73));
+        chart.getCategoryPlot().setBackgroundPaint(new Color(54, 63, 73));
+        chart.getCategoryPlot().setDomainGridlinePaint(new Color(54, 63, 73));
+        chart.getCategoryPlot().setDomainGridlinesVisible(false);
+        chart.getCategoryPlot().setOutlinePaint(new Color(54, 63, 73));
+
+        ChartPanel cp = new ChartPanel(chart);
+        cp.setBackground(new Color(54, 63, 73));
+
+        jPanelThongKe.add(cp);
+        jPanelThongKe.repaint();
+        jPanelThongKe.revalidate();
+        jPanelThongKe.validate();
+
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanelTTCP = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jTextFieldMaCP = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jTextFieldSan = new javax.swing.JTextField();
+        jTextFieldSDT = new javax.swing.JTextField();
+        jTextFielFax = new javax.swing.JTextField();
+        jTextFieldDiaChiWeb = new javax.swing.JTextField();
+        jTextFieldEmail = new javax.swing.JTextField();
+        jTextFieldSL = new javax.swing.JTextField();
+        jTextFieldTenCP = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jTextFieldGia = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jPanelGTC = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTableGTC = new javax.swing.JTable();
+        jPanelThongKe = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
+
+        jPanelTTCP.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setText("Mã Cổ Phiếu:");
+
+        jTextFieldMaCP.setEditable(false);
+        jTextFieldMaCP.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldMaCP.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldMaCP.setOpaque(false);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setText("Mã Sàn:");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("Tên Cổ Phiếu:");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setText("Địa Chỉ:");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setText("SĐT");
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel6.setText("Fax:");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel7.setText("Địa Chỉ Web:");
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel8.setText("Email:");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel9.setText("Số Lượng Niêm Yết:");
+
+        jTextFieldSan.setEditable(false);
+        jTextFieldSan.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldSan.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldSan.setOpaque(false);
+
+        jTextFieldSDT.setEditable(false);
+        jTextFieldSDT.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldSDT.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldSDT.setOpaque(false);
+
+        jTextFielFax.setEditable(false);
+        jTextFielFax.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFielFax.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFielFax.setOpaque(false);
+
+        jTextFieldDiaChiWeb.setEditable(false);
+        jTextFieldDiaChiWeb.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldDiaChiWeb.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldDiaChiWeb.setOpaque(false);
+
+        jTextFieldEmail.setEditable(false);
+        jTextFieldEmail.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldEmail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldEmail.setOpaque(false);
+
+        jTextFieldSL.setEditable(false);
+        jTextFieldSL.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldSL.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldSL.setOpaque(false);
+
+        jTextFieldTenCP.setEditable(false);
+        jTextFieldTenCP.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldTenCP.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldTenCP.setOpaque(false);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jTextArea1.setWrapStyleWord(true);
+        jTextArea1.setBorder(null);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jTextFieldGia.setEditable(false);
+        jTextFieldGia.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTextFieldGia.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 0, 0)));
+        jTextFieldGia.setOpaque(false);
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel10.setText("Giá Niêm Yết:");
+
+        javax.swing.GroupLayout jPanelTTCPLayout = new javax.swing.GroupLayout(jPanelTTCP);
+        jPanelTTCP.setLayout(jPanelTTCPLayout);
+        jPanelTTCPLayout.setHorizontalGroup(
+            jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTTCPLayout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanelTTCPLayout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldMaCP, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanelTTCPLayout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldSan, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelTTCPLayout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                            .addComponent(jTextFieldTenCP, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelTTCPLayout.createSequentialGroup()
+                            .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel9)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel10))
+                            .addGap(33, 33, 33)
+                            .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jTextFieldSL)
+                                .addComponent(jTextFieldEmail)
+                                .addComponent(jTextFieldDiaChiWeb)
+                                .addComponent(jTextFielFax)
+                                .addComponent(jTextFieldSDT)
+                                .addComponent(jScrollPane1)
+                                .addComponent(jTextFieldGia)))))
+                .addContainerGap(243, Short.MAX_VALUE))
+        );
+        jPanelTTCPLayout.setVerticalGroup(
+            jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTTCPLayout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldMaCP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldSan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldTenCP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jTextFieldSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFielFax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDiaChiWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldSL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTTCPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextFieldGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(27, 27, 27))
+        );
+
+        jTabbedPane1.addTab("Thông Tin Cổ Phiếu", jPanelTTCP);
+
+        jPanelGTC.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTableGTC.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTableGTC.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "MãCP", "Ngày","GiáTC"
+            }
+        ));
+        jTableGTC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTableGTC.setFillsViewportHeight(true);
+        jTableGTC.setFocusable(false);
+        jTableGTC.setRowHeight(30);
+        jTableGTC.setSelectionBackground(new java.awt.Color(255, 0, 0));
+        jTableGTC.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        jTableGTC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableGTCMouseClicked(evt);
+            }
+        });
+        jScrollPane5.setViewportView(jTableGTC);
+        jTableGTC.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 18));
+        jTableGTC.getTableHeader().setOpaque(false);
+        jTableGTC.getTableHeader().setBackground(Color.BLUE);
+        jTableGTC.getTableHeader().setForeground(new Color(0,0,0));
+
+        javax.swing.GroupLayout jPanelGTCLayout = new javax.swing.GroupLayout(jPanelGTC);
+        jPanelGTC.setLayout(jPanelGTCLayout);
+        jPanelGTCLayout.setHorizontalGroup(
+            jPanelGTCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelGTCLayout.createSequentialGroup()
+                .addGap(62, 62, 62)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 928, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(113, Short.MAX_VALUE))
+        );
+        jPanelGTCLayout.setVerticalGroup(
+            jPanelGTCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelGTCLayout.createSequentialGroup()
+                .addGap(132, 132, 132)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Giá Tham Chiếu", jPanelGTC);
+
+        jPanelThongKe.setLayout(new java.awt.BorderLayout());
+        jTabbedPane1.addTab("Thống Kê", jPanelThongKe);
+
+        jPanel4.setBackground(new java.awt.Color(255, 102, 0));
+
+        jLabel14.setFont(new java.awt.Font("Consolas", 2, 24)); // NOI18N
+        jLabel14.setText("CHI TIẾT CỔ PHIẾU");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(402, 402, 402))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(62, Short.MAX_VALUE)
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void jTableGTCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableGTCMouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTableGTCMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(FrDetailCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(FrDetailCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(FrDetailCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(FrDetailCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new FrDetailCP().setVisible(true);
+//            }
+//        });
+//    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanelGTC;
+    private javax.swing.JPanel jPanelTTCP;
+    private javax.swing.JPanel jPanelThongKe;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTableGTC;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextFielFax;
+    private javax.swing.JTextField jTextFieldDiaChiWeb;
+    private javax.swing.JTextField jTextFieldEmail;
+    private javax.swing.JTextField jTextFieldGia;
+    private javax.swing.JTextField jTextFieldMaCP;
+    private javax.swing.JTextField jTextFieldSDT;
+    private javax.swing.JTextField jTextFieldSL;
+    private javax.swing.JTextField jTextFieldSan;
+    private javax.swing.JTextField jTextFieldTenCP;
+    // End of variables declaration//GEN-END:variables
+}
